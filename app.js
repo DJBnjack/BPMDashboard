@@ -51,15 +51,18 @@ app.use(function(req, res, next){
 // } 
 // 
 // setInterval(updateNodeInfo, 60*1000);
-
-// routes
 // app.get('/', function(req, res) {
 //   if (node_info.length === 0) updateNodeInfo(function () {
 //     res.render('index', {node_info: node_info});
 //   });
 // });
+
+
 app.get('/', function(req, res) {
-    res.render('index', {env_info: JSON.stringify(process.env, null, 2)});
+    res.render('index', {
+      env_info: JSON.stringify(process.env, null, 2),
+      datetime: new Date().toISOString()
+    });
 })
 
 // catch 404 and forward to error handler
