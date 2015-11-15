@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var rp = require('request-promise');
 
 var app = express();
 
@@ -27,10 +28,39 @@ app.use(function(req, res, next){
  next();
 });
 
+// // get node info
+// var node_info = "";
+// var authorizationHeader = {	'Authorization': 'ApiKey djbnjack:97c5dae24f965291a3433efa99684113d2fee38f'};
+// var baseTutumURI = "https://dashboard.tutum.co/";  
+// var getNodes = {
+// 	uri: baseTutumURI + "/api/v1/node/18179ace-908d-43eb-9112-afd3b532788a/",
+// 	headers: authorizationHeader,
+// 	json: true,
+// };
+// 
+// var updateNodeInfo = function(cb){
+//   rp(getNodes)
+//     .then(function (result){
+//       node_info = JSON.stringify(result, null, 2)
+//       console.log(node_info);
+//       if (typeof cb === 'function') cb();
+//     })
+//     .catch(function (error){
+//       console.error(error);
+//     })
+// } 
+// 
+// setInterval(updateNodeInfo, 60*1000);
+
 // routes
+// app.get('/', function(req, res) {
+//   if (node_info.length === 0) updateNodeInfo(function () {
+//     res.render('index', {node_info: node_info});
+//   });
+// });
 app.get('/', function(req, res) {
-  res.render('index');
-});
+    res.render('index', {env_info: JSON.stringify(process.env, null, 2)});
+})
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
