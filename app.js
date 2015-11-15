@@ -4,7 +4,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var rp = require('request-promise');
+var request = require('request');
+var btoa = function (str) {return new Buffer(str).toString('base64');};
+var baseNeoURI = 'http://neo4j.databases.djbnjack.svc.tutum.io:8080';
+var authorizationHeader = {	'Authorization': 'Basic ' + btoa("neo4j:vetman2") };  
 
 var app = express();
 
@@ -28,40 +31,38 @@ app.use(function(req, res, next){
  next();
 });
 
-// // get node info
-// var node_info = "";
-// var authorizationHeader = {	'Authorization': 'ApiKey djbnjack:97c5dae24f965291a3433efa99684113d2fee38f'};
-// var baseTutumURI = "https://dashboard.tutum.co/";  
-// var getNodes = {
-// 	uri: baseTutumURI + "/api/v1/node/18179ace-908d-43eb-9112-afd3b532788a/",
-// 	headers: authorizationHeader,
-// 	json: true,
-// };
-// 
-// var updateNodeInfo = function(cb){
-//   rp(getNodes)
-//     .then(function (result){
-//       node_info = JSON.stringify(result, null, 2)
-//       console.log(node_info);
-//       if (typeof cb === 'function') cb();
-//     })
-//     .catch(function (error){
-//       console.error(error);
-//     })
-// } 
-// 
-// setInterval(updateNodeInfo, 60*1000);
-// app.get('/', function(req, res) {
-//   if (node_info.length === 0) updateNodeInfo(function () {
-//     res.render('index', {node_info: node_info});
-//   });
-// });
 
+function getProcesses(callback) {
+  var options = {
+    url: baseNeoURI + '/db/data/transaction/commit',
+    headers: authorizationHeader,
+    json: true,
+    method: 'POST',
+    body: { "statements" : [
+      {
+        "statement": "MATCH (n:node {type:'process'}) RETURN n",
+        "resultDataContents":["row"]
+      }
+    ]}
+  };
+  
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      callback(JSON.stringify(body.results[0].data, null, 2));
+    }
+  });
+};
+
+app.get('/processes', function(req, res) {
+  res.setHeader('Content-Type', 'application/json');
+  getProcesses(function (info) {
+    res.send(info);  
+  })
+});
 
 app.get('/', function(req, res) {
     res.render('index', {
-      hostname: process.env["HOSTNAME"],
-      datetime: new Date().toISOString()
+      datetime: new Date().toLocaleString(),
     });
 })
 
