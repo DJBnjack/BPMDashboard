@@ -4,7 +4,7 @@ EXPOSE 3000
 
 # Install app dependencies
 COPY package.json /src/package.json
-RUN cd /src; npm install
+RUN cd /src; npm --no-color install
 
 # Bundle app source
 COPY . /src
