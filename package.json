@@ -14,7 +14,9 @@
     "hbs": "^4.0.0",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
-    "nodemon": "^1.8.1"
+    "nodemon": "^1.8.1",
+    "request": "^2.65.0",
+    "request-promise": "^1.0.2"
   },
   "devDependencies": {
     "chai": "^3.4.1",
@@ -22,8 +24,6 @@
     "grunt-cafe-mocha": "^0.1.13",
     "grunt-contrib-jshint": "^0.11.3",
     "grunt-exec": "^0.4.6",
-    "mocha": "^2.3.3",
-    "request": "^2.65.0",
-    "request-promise": "^1.0.2"
+    "mocha": "^2.3.3"
   }
 }
