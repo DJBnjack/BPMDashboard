@@ -60,7 +60,7 @@ app.use(function(req, res, next){
 
 app.get('/', function(req, res) {
     res.render('index', {
-      env_info: JSON.stringify(process.env, null, 2),
+      hostname: process.env["HOSTNAME"],
       datetime: new Date().toISOString()
     });
 })
