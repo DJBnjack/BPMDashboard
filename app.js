@@ -4,10 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var request = require('request');
-var btoa = function (str) {return new Buffer(str).toString('base64');};
-var baseNeoURI = 'http://neo4j.databases.djbnjack.svc.tutum.io:8080';
-var authorizationHeader = {	'Authorization': 'Basic ' + btoa("neo4j:vetman2") };  
+var processes = require('./dal/processes.js')
 
 var app = express();
 
@@ -18,6 +15,7 @@ app.set('view engine', 'hbs');
 // Disable cache
 app.disable('etag');
 
+// Setup server
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -31,33 +29,20 @@ app.use(function(req, res, next){
  next();
 });
 
-
-function getProcesses(callback) {
-  var options = {
-    url: baseNeoURI + '/db/data/transaction/commit',
-    headers: authorizationHeader,
-    json: true,
-    method: 'POST',
-    body: { "statements" : [
-      {
-        "statement": "MATCH (n:node {type:'process'}) RETURN n",
-        "resultDataContents":["row"]
-      }
-    ]}
-  };
-  
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      callback(JSON.stringify(body.results[0].data, null, 2));
-    }
-  });
-};
-
+// Expose process logic
 app.get('/processes', function(req, res) {
   res.setHeader('Content-Type', 'application/json');
-  getProcesses(function (info) {
-    res.send(info);  
-  })
+  processes.getProcesses(info => res.send(info));
+});
+
+app.post('/processes', function(req, res) {
+  res.setHeader('Content-Type', 'application/json');
+  processes.createProcess(info => res.send(info));
+});
+
+app.delete('/processes', function(req, res) {
+  res.setHeader('Content-Type', 'application/json');
+  processes.deleteProcesses(info => res.send(info));
 });
 
 app.get('/', function(req, res) {
@@ -82,6 +67,5 @@ app.use(function (err, req, res, next) {
     error: err
   });
 });
-
 
 module.exports = app;
