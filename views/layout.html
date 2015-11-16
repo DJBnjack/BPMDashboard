@@ -1,15 +1,17 @@
 <!doctype html>
-<html>
+<html ng-app="phonecatApp">
 	<head>
 		<title>The Distributed BPM Network - Dashboard</title>
-		{{#if showTests}}
+		<% if showTests %>
 			<link rel="stylesheet" href="/vendor/mocha.css">
-		{{/if}}
+		<% endif %>
 		<script src="//code.jquery.com/jquery-2.0.2.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.1/angular.min.js"></script>
+		<script src="js/controllers.js"></script>
 	</head>
-	<body>
-		{{{body}}}
-		{{#if showTests}}
+	<body ng-controller="PhoneListCtrl">
+		<% block body %><% endblock %>
+		<% if showTests %>
 			<div id="mocha"></div>
 			<script src="/vendor/mocha.js"></script>
 			<script src="/vendor/chai.js"></script>
@@ -18,10 +20,10 @@
 				var assert = chai.assert;
 			</script>
 			<script src="/qa/tests-global.js"></script>
-			{{#if pageTestScript}}
-				<script src="{{pageTestScript}}"></script>
-			{{/if}}
+			<% if pageTestScript %>
+				<script src="<$ pageTestScript $>"></script>
+			<% endif %>
 			<script>mocha.run();</script>
-		{{/if}}
+		<% endif %>
 	</body>
 </html>

@@ -4,13 +4,24 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var processes = require('./dal/processes.js')
+var processes = require('./dal/processes.js');
+var nunjucks = require('nunjucks');
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+// view engine setup, compatible with angular
+nunjucks.configure('views', {
+    autoescape: true,
+    express: app,
+    tags: {
+      blockStart: '<%',
+      blockEnd: '%>',
+      variableStart: '<$',
+      variableEnd: '$>',
+      commentStart: '<#',
+      commentEnd: '#>'
+    }
+});
 
 // Disable cache
 app.disable('etag');
@@ -57,8 +68,10 @@ router.delete('/processes/:guid', function(req, res) {
   processes.deleteProcess(req.params.guid, info => res.send(info));
 });
 
-router.get('/', (req, res) => res.render('index', { datetime: new Date().toLocaleString()}));
+// Get main page
+router.get('/', (req, res) => res.render('index.html', { datetime: new Date().toLocaleString()}));
 
+// Set router
 app.use('/', router);
 
 // catch 404 and forward to error handler
@@ -72,7 +85,7 @@ app.use(function (req, res, next) {
 // will print stacktrace
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {
+  res.render('error.html', {
     message: err.message,
     error: err
   });

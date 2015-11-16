@@ -1,0 +1,13 @@
+<% extends "layout.html" %>
+
+<% block body %>
+<h1>Welcome to The Distributed BPM Network</h1>
+<h2>This is the dashboard at <$ datetime $></h2>
+<pre>The ultimate {{ 'test' + '!' }}</pre>
+<ul>
+<li ng-repeat="phone in phones">
+	<span>{{phone.name}}</span>
+	<p>{{phone.snippet}}</p>
+</li>
+</ul>
+<% endblock %>
