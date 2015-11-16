@@ -29,27 +29,37 @@ app.use(function(req, res, next){
  next();
 });
 
+var router = express.Router();
+
 // Expose process logic
-app.get('/processes', function(req, res) {
+router.get('/processes', function(req, res) {
   res.setHeader('Content-Type', 'application/json');
   processes.getProcesses(info => res.send(info));
 });
 
-app.post('/processes', function(req, res) {
+router.get('/processes/:guid', function(req, res) {
+  res.setHeader('Content-Type', 'application/json');
+  processes.getProcess(req.params.guid, info => res.send(info));
+});
+
+router.post('/processes', function(req, res) {
   res.setHeader('Content-Type', 'application/json');
   processes.createProcess(info => res.send(info));
 });
 
-app.delete('/processes', function(req, res) {
+router.delete('/processes', function(req, res) {
   res.setHeader('Content-Type', 'application/json');
   processes.deleteProcesses(info => res.send(info));
 });
 
-app.get('/', function(req, res) {
-    res.render('index', {
-      datetime: new Date().toLocaleString(),
-    });
-})
+router.delete('/processes/:guid', function(req, res) {
+  res.setHeader('Content-Type', 'application/json');
+  processes.deleteProcess(req.params.guid, info => res.send(info));
+});
+
+router.get('/', (req, res) => res.render('index', { datetime: new Date().toLocaleString()}));
+
+app.use('/', router);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

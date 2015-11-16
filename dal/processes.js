@@ -30,6 +30,21 @@ function getProcesses(callback) {
   executeStatements([statement], callback);
 };
 
+function getProcess(guid, callback) {
+  var statement = 
+  {
+    "statement": "MATCH (n:node {type:'process', guid: '" + guid + "'}) RETURN n",
+    "resultDataContents":["row"]
+  };
+  
+  executeStatements([statement], callback);
+}
+
+function deleteProcess(guid, callback) {
+  var statement = {	"statement": "MATCH (n:node {type:'process', guid: '" + guid + "'}) DETACH DELETE n" };
+  executeStatements([statement], callback);
+};
+
 function deleteProcesses(callback) {
   var statement = {	"statement": "MATCH (n) DETACH DELETE n" };
   executeStatements([statement], callback);
@@ -58,5 +73,9 @@ function createProcess(callback) {
 }
 
 module.exports.getProcesses = getProcesses;
+module.exports.getProcess = getProcess;
+
 module.exports.createProcess = createProcess;
+
 module.exports.deleteProcesses = deleteProcesses;
+module.exports.deleteProcess = deleteProcess;
