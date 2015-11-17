@@ -5,8 +5,18 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var processes = require('./api/processes.js');
+var session = require('express-session')({
+        secret: "aliensAreAmongUs",
+        resave: true,
+        saveUninitialized: true
+    });
+var sharedsession = require('express-socket.io-session');
 
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
+server.listen(80);
 
 // Disable cache
 app.disable('etag');
@@ -21,10 +31,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var router = express.Router();
 
-// Define process api
-processes.defineProcessApi(router);
+// Setup process api
+processes.setupProcessApi(router);
 
 // Set router
 app.use('/', router);
 
-module.exports = app;
+// Test Socket.IO
+io.use(sharedsession(session));
+io.on('connection', function(socket){
+	console.log("connected");
+	socket.emit("greetings", {msg:"hello"});
+	socket.on("something", function(data){
+		console.log("client sent data: " + data);
+		console.log(socket.handshake.session);
+	})
+});

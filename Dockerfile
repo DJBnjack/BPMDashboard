@@ -1,6 +1,5 @@
 FROM node:latest
-EXPOSE 3000
-
+EXPOSE 80
 
 # Install app dependencies
 COPY package.json /src/package.json

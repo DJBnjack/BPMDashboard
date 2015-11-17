@@ -72,8 +72,8 @@ function createProcess(callback) {
   executeStatements([statement], callback);
 }
 
-function defineProcessApi(router) {
-  // Expose process logic
+function setupProcessApi(router) {
+  // Get processes
   router.get('/processes', function(req, res) {
     res.setHeader('Content-Type', 'application/json');
     getProcesses(info => res.send(info));
@@ -84,11 +84,13 @@ function defineProcessApi(router) {
     getProcess(req.params.guid, info => res.send(info));
   });
   
+  // Create process
   router.post('/processes', function(req, res) {
     res.setHeader('Content-Type', 'application/json');
     createProcess(info => res.send(info));
   });
   
+  // Delete processes
   router.delete('/processes', function(req, res) {
     res.setHeader('Content-Type', 'application/json');
     deleteProcesses(info => res.send(info));
@@ -100,4 +102,4 @@ function defineProcessApi(router) {
   });
 }
 
-module.exports.defineProcessApi = defineProcessApi;
+module.exports.setupProcessApi = setupProcessApi;
