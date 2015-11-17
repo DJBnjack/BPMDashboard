@@ -1,9 +1,11 @@
 FROM node:latest
 EXPOSE 80
 
+# Add node-gyp
+RUN npm install -g node-gyp
+
 # Install app dependencies
 COPY package.json /src/package.json
-RUN npm install -g node-gyp
 RUN cd /src; npm install
 
 # Bundle app source
