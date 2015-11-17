@@ -1,0 +1,19 @@
+<!doctype html>
+<html ng-app="phonecatApp">
+	<head>
+		<title>The Distributed BPM Network - Dashboard</title>
+		<script src="//code.jquery.com/jquery-2.0.2.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.1/angular.min.js"></script>
+		<script src="js/controllers.js"></script>
+	</head>
+	<body ng-controller="PhoneListCtrl">
+		<h1>Welcome to The Distributed BPM Network</h1>
+		<pre>The ultimate {{ 'test' + '!' }}</pre>
+		<ul>
+		<li ng-repeat="phone in phones">
+			<span>{{phone.name}}</span>
+			<p>{{phone.snippet}}</p>
+		</li>
+		</ul>
+	</body>
+</html>
