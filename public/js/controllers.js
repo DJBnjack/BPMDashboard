@@ -46,4 +46,7 @@ phonecatApp.controller('PhoneListCtrl', function ($scope, socket) {
         console.log("user data: " + JSON.stringify(data));
         $scope.recievedTroughSocket = data.msg;
     });
+    socket.on("processes", function(data){
+        console.log(data);
+    });
 });

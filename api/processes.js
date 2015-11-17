@@ -1,6 +1,7 @@
 var request = require('request');
 var btoa = function (str) {return new Buffer(str).toString('base64');};
-var baseNeoURI = 'http://neo4j.databases.djbnjack.svc.tutum.io:8080';
+// var baseNeoURI = 'http://neo4j.databases.djbnjack.svc.tutum.io:8080';
+var baseNeoURI = 'http://neo4j-1.databases.djbnjack.cont.tutum.io:8080';
 var authorizationHeader = {	'Authorization': 'Basic ' + btoa("neo4j:vetman2") };  
 var uuid = require('node-uuid');
 
@@ -72,7 +73,7 @@ function createProcess(callback) {
   executeStatements([statement], callback);
 }
 
-function setupProcessApi(router) {
+function setupProcessApi(router, io) {
   // Get processes
   router.get('/processes', function(req, res) {
     res.setHeader('Content-Type', 'application/json');
@@ -88,17 +89,20 @@ function setupProcessApi(router) {
   router.post('/processes', function(req, res) {
     res.setHeader('Content-Type', 'application/json');
     createProcess(info => res.send(info));
+    io.emit('processes', 'changed');
   });
   
   // Delete processes
   router.delete('/processes', function(req, res) {
     res.setHeader('Content-Type', 'application/json');
     deleteProcesses(info => res.send(info));
+    io.emit('processes', 'changed');
   });
   
   router.delete('/processes/:guid', function(req, res) {
     res.setHeader('Content-Type', 'application/json');
     deleteProcess(req.params.guid, info => res.send(info));
+    io.emit('processes', 'changed');
   });
 }
 
